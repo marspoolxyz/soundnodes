@@ -1,0 +1,33 @@
+{
+  "name": "soundnodes_assets",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "scripts": {
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "@dfinity/agent": "^0.8.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "assert": "2.0.0",
+    "axios": "^0.19.2",
+    "bootstrap": "^5.0.2",
+    "buffer": "6.0.3",
+    "events": "3.3.0",
+    "html-webpack-plugin": "5.3.1",
+    "process": "0.11.10",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "stream-browserify": "3.0.0",
+    "terser-webpack-plugin": "5.1.1",
+    "util": "0.12.3",
+    "webpack": "5.24.4",
+    "webpack-cli": "4.5.0"
+  },
+  "dependencies": {
+    "react-bootstrap": "^2.0.0-beta.4"
+  }
+}

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SoundNodes Music Powered by Dfinity</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="main.css" />
+
+</head>
+<body>
+
+<div class="jumbotron text-center">
+  <h1>SoundNodes Music</h1>
+  <p>Upload or listen to songs uploaded</p> 
+</div>
+  
+<div class="container">
+	<div class="row" style="height:50px;">
+		<div class="col-sm-12">
+			<div id="songDiv"><select id="songList"></select>
+			<button id="get-mp3">Play Song !</button>
+			</div>
+			<div id="error" style="color:#cc0000"></div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<div id="song-information" style="width: 100%;color: #0e023a;"></div>
+			<div id="song-container"></div>
+		</div>  
+		<div class="col-sm-6">
+		<label id="video-file-label">
+			<section><span style="color: #d52710;">All types of Audio formats accepted</span></section>
+			
+		</label>			
+		  <div id="video-information" style="width: 100%;color: #2c00cc;"></div>
+		  <div id="chunk-information" style="width: 100%;color: #cc0000;"></div>
+		  <div id="description"></div>
+		</div>  
+ 
+	  </div>  
+  <div class="row" style="height:150px;">
+    <div class="col-sm-4">
+      <h3>Song Name</h3>
+      <input id="name" alt="Song Name" type="text" />
+      <p>Used in naming the song and saved</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Song Caption</h3>
+      <input id="caption" alt="Caption" type="text" />
+      <p>Used in naming the song and saved</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Song Tags</h3>        
+      <input id="songtags" alt="Song Tags" type="text" />
+      <p>Used for search and find based on tags</p>
+	  <input type="file" id="mp3songs">
+    </div>
+  </div>
+  <div class="row">
+	<div class="col-sm-12" class="audio-player" id="song" style="width: 100%;color: #0a0225;">
+	</div>
+  </div>
+  <div class="row">
+	<div class="col-sm-12">
+		<section id="greeting"></section>
+	</div>
+  </div>  
+  <div class="row" style="background-color:#222;height: 50px;">
+    <div class="col-sm-12">
+		<div class="row"><br>
+			<div class="col-sm-3" style="size:20px;">
+				<span style="size:20px;"><span style="color: #f1e5e5;size: 20px;">Made with <span style="color: #e25555;size: 20px;">&hearts;</span> on</span>
+			</div>
+			<div class="col-sm-1">
+				<img width="30px" style=" display: block;  margin-left: auto;  margin-right: auto;" src="dfinity.svg">
+			</div>
+		</div>		
+		<input type="hidden" id="row" value="1">
+		<input type="hidden" id="col" value="1">
+    </div>  
+  </div>
+  <div class="row" style="background-color:#222;height: 50px;">
+    <div class="col-sm-12">
+		<div class="row"><br>
+			<div class="col-sm-12" style="size:20px;">
+				<span style="size:20px;"><span style="color: #f1e5e5;size: 20px;">Donate ICP : a5a9dce51088dc4584342667844fb29cd120020274a95f3329026693375a78b0 <a href="https://t.me/marspoolxyz">Join Telegram Group</a> </span>
+			</div>
+		</div>		
+    </div>  
+  </div>
+</div>
+<input type="file" id="video-file" style='display:none'>
+<script>
+		const input = document.querySelector('#video-file');
+		//changed to sandbox, becuase we cannot have nice things
+		const url = "https://ws.api.video/upload?token=to5PoOjCz98FdLGnsrFflnYo";
+		var chunkCounter =0;
+		//break into 1 MB chunks for demo purposes
+		const chunkSize = 1000000;  
+		var videoId = "";
+		var playerUrl = "";
+  
+		function readFile(event) 
+		{
+			  console.log(event.target.result);
+		 }
+  
+		input.addEventListener('change', () => {
+		  const file = input.files[0];
+		  const filename = input.files[0].name;
+		  var numberofChunks = Math.ceil(file.size/chunkSize);
+	 
+		  var blob = new Blob(["\x01\x02\x03\x04"]),
+  
+		  fileReader = new FileReader(),
+	  array;
+  
+	  fileReader.onload = function() {
+
+		
+		  console.log("Calling.....");
+		  array = this.result;
+		  console.log("Big File contains", array.byteLength, "bytes.");
+		  const videoBuffer = Array.from(new Uint8Array(array));
+		  console.log(videoBuffer.length);
+		  const MAX_CHUNK_SIZE = 1024 * 500; // 500kb
+  
+		  var start =0; 
+		  chunkCounter=0;
+		  videoId="";
+		  
+		  var chunkEnd = start + chunkSize;
+		  for (let byteStart = 0;	byteStart < file.size;	byteStart += MAX_CHUNK_SIZE,chunkCounter++) {
+			  const videoSlice = videoBuffer.slice(byteStart,Math.min(file.size, byteStart + MAX_CHUNK_SIZE));
+			  console.log(videoSlice.length);
+			  console.log(chunkCounter);
+			}		
+			
+		
+		  
+		  };
+  
+		  fileReader.readAsArrayBuffer(file);
+  
+		  document.getElementById("video-information").innerHTML = "There will be " + numberofChunks + " chunks uploaded."
+		  var start =0; 
+		  chunkCounter=0;
+		  videoId="";
+		  var chunkEnd = start + chunkSize;
+		  //upload the first chunk to get the videoId
+		  // createChunk(videoId, start);
+		  
+  
+		  
+		  function createChunk(videoId, start, end){
+			  chunkCounter++;
+			  console.log("created chunk: ", chunkCounter);
+			  chunkEnd = Math.min(start + chunkSize , file.size );
+			  const chunk = file.slice(start, chunkEnd);
+  
+  
+			  console.log("i created a chunk of video" + start + "-" + chunkEnd + "minus 1	");
+				  const chunkForm = new FormData();
+			  if(videoId.length >0){
+				  //we have a videoId
+				  chunkForm.append('videoId', videoId);
+				  console.log("added videoId");	
+				  
+			  }
+			  //chunkForm.append('file', chunk);
+  
+			  const sliceToNat = new Uint8Array(chunk);
+  
+				  chunkForm.append('file', chunk, filename);
+			  console.log("added file" + sliceToNat);
+			  console.log(sliceToNat.length);
+  
+			  console.log(sliceToNat);
+  
+			  
+			  //created the chunk, now upload iit
+			  uploadChunk(chunkForm, start, chunkEnd);
+		  }
+		  
+		  function uploadChunk(chunkForm, start, chunkEnd){
+			  var oReq = new XMLHttpRequest();
+			  oReq.upload.addEventListener("progress", updateProgress);	
+			  oReq.open("POST", url, true);
+			  var blobEnd = chunkEnd-1;
+			  var contentRange = "bytes "+ start+"-"+ blobEnd+"/"+file.size;
+			  oReq.setRequestHeader("Content-Range",contentRange);
+			  console.log("Content-Range", contentRange);
+				function updateProgress (oEvent) {
+					if (oEvent.lengthComputable) {  
+					var percentComplete = Math.round(oEvent.loaded / oEvent.total * 100);
+				  
+					var totalPercentComplete = Math.round((chunkCounter -1)/numberofChunks*100 +percentComplete/numberofChunks);
+					document.getElementById("chunk-information").innerHTML = "Chunk # " + chunkCounter + " is " + percentComplete + "% uploaded. Total uploaded: " + totalPercentComplete +"%";
+				//	console.log (percentComplete);
+					// ...
+				  } else {
+					  console.log ("not computable");
+					// Unable to compute progress information since the total size is unknown
+				  }
+				}
+			  oReq.onload = function (oEvent) {
+							 // Uploaded.
+							  console.log("uploaded chunk" );
+							  console.log("oReq.response", oReq.response);
+							  var resp = JSON.parse(oReq.response)
+							  videoId = resp.videoId;
+							  //playerUrl = resp.assets.player;
+							  console.log("videoId",videoId);
+							  
+							  //now we have the video ID - loop through and add the remaining chunks
+							  //we start one chunk in, as we have uploaded the first one.
+							  //next chunk starts at + chunkSize from start
+							  start += chunkSize;	
+							  //if start is smaller than file size - we have more to still upload
+							  if(start<file.size){
+								  //create the new chunk
+								  createChunk(videoId, start);
+							  }
+							  else{
+								  //the video is fully uploaded. there will now be a url in the response
+								  playerUrl = resp.assets.player;
+								  console.log("all uploaded! Watch here: ",playerUrl ) ;
+								  document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
+							  }
+							  
+				};
+				oReq.send(chunkForm);
+			  
+		  }
+  
+	  
+		});
+	  </script>
+  
+  </body>
+  
+  </html>
